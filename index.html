@@ -180,16 +180,14 @@
             dayTab.classList.add('active');
             yearTab.classList.remove('active');
             const labels = getLast7Days();
-            const exampleData = [3, 4, 2, 5, 1, 3, 4];
-            drawGraph(exampleData, labels);
+            drawGraph([], labels);
         });
 
         yearTab.addEventListener('click', () => {
             yearTab.classList.add('active');
             dayTab.classList.remove('active');
             const labels = getLast7Years();
-            const exampleData = [4, 3, 5, 2, 1, 4, 3];
-            drawGraph(exampleData, labels);
+            drawGraph([], labels);
         });
 
         graph.addEventListener('click', (e) => {
@@ -225,9 +223,7 @@
         });
 
         // Initial draw
-        const initialLabels = getLast7Days();
-        const initialData = [3, 4, 2, 5, 1, 3, 4];
-        drawGraph(initialData, initialLabels);
+        dayTab.click();
     </script>
 </body>
 </html>
