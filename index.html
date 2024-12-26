@@ -105,7 +105,7 @@
             </select>
 
             <button id="save-record">保存</button>
-            <button id="do-event">このイベントをする</button>
+            <button id="delete-event">削除</button>
         </div>
     </div>
 
@@ -120,7 +120,7 @@
         const recordDate = document.getElementById('record-date');
         const recordMotivation = document.getElementById('record-motivation');
         const saveRecord = document.getElementById('save-record');
-        const doEventButton = document.getElementById('do-event');
+        const deleteEventButton = document.getElementById('delete-event');
 
         const ctx = graph.getContext('2d');
         let currentOffset = 0;
@@ -291,9 +291,14 @@
             updateGraph();
         });
 
-        doEventButton.addEventListener('click', () => {
-            alert('このイベントを実行します！');
+        deleteEventButton.addEventListener('click', () => {
+            const records = JSON.parse(localStorage.getItem('motivationRecords')) || [];
+            const updatedRecords = records.filter(r => r.date !== recordDate.value);
+            localStorage.setItem('motivationRecords', JSON.stringify(updatedRecords));
+
+            alert('イベントが削除されました！');
             recordPopup.style.display = 'none';
+            updateGraph();
         });
 
         // Close popup if clicked outside
