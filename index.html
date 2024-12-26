@@ -136,13 +136,13 @@
             return dates;
         }
 
-        function getLast7Years(offset = 0) {
+        function getNext7Years(offset = 0) {
             const years = [];
             const currentYear = new Date().getFullYear();
             for (let i = 0; i < 7; i++) {
-                years.push((currentYear - offset * 7 - i).toString());
+                years.push((currentYear + offset * 7 + i).toString());
             }
-            return years.reverse();
+            return years;
         }
 
         // Initialize Graph
@@ -201,7 +201,7 @@
                 const labels = getLast7Days(currentOffset);
                 drawGraph([], labels);
             } else {
-                const labels = getLast7Years(currentOffset);
+                const labels = getNext7Years(currentOffset);
                 drawGraph([], labels);
             }
         }
