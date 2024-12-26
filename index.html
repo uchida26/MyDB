@@ -105,6 +105,7 @@
             </select>
 
             <button id="save-record">保存</button>
+            <button id="do-event">このイベントをする</button>
         </div>
     </div>
 
@@ -119,6 +120,7 @@
         const recordDate = document.getElementById('record-date');
         const recordMotivation = document.getElementById('record-motivation');
         const saveRecord = document.getElementById('save-record');
+        const doEventButton = document.getElementById('do-event');
 
         const ctx = graph.getContext('2d');
         let currentOffset = 0;
@@ -174,7 +176,7 @@
                 const y = height - padding - i * stepY;
                 ctx.moveTo(padding, y);
                 ctx.lineTo(width - padding, y);
-                ctx.fillText(i, padding - 20, y);
+                ctx.fillText(i, padding - 20, y + stepY / 2);
             }
 
             // Vertical lines
@@ -182,7 +184,7 @@
                 const x = padding + i * stepX;
                 ctx.moveTo(x, padding);
                 ctx.lineTo(x, height - padding);
-                ctx.fillText(label, x - 10, height - padding + 20);
+                ctx.fillText(label, x - stepX / 4, height - padding + 20 + stepY / 4);
             });
 
             ctx.stroke();
@@ -192,13 +194,13 @@
             ctx.beginPath();
             data.forEach((point, i) => {
                 if (point !== null) {
-                    const x = padding + i * stepX;
-                    const y = height - padding - point.value * stepY;
+                    const x = padding + i * stepX + stepX / 2;
+                    const y = height - padding - point.value * stepY + stepY / 2;
 
                     // Draw line
                     if (i > 0 && data[i - 1] !== null) {
-                        const prevX = padding + (i - 1) * stepX;
-                        const prevY = height - padding - data[i - 1].value * stepY;
+                        const prevX = padding + (i - 1) * stepX + stepX / 2;
+                        const prevY = height - padding - data[i - 1].value * stepY + stepY / 2;
                         ctx.moveTo(prevX, prevY);
                         ctx.lineTo(x, y);
                     }
@@ -287,6 +289,11 @@
             alert('モチベーションを記録しました！');
             recordPopup.style.display = 'none';
             updateGraph();
+        });
+
+        doEventButton.addEventListener('click', () => {
+            alert('このイベントを実行します！');
+            recordPopup.style.display = 'none';
         });
 
         // Close popup if clicked outside
