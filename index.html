@@ -286,7 +286,7 @@
             }
             localStorage.setItem('motivationRecords', JSON.stringify(records));
 
-            alert('モチベーションを記録しました！');
+            
             recordPopup.style.display = 'none';
             updateGraph();
         });
@@ -294,9 +294,13 @@
         deleteEventButton.addEventListener('click', () => {
             const records = JSON.parse(localStorage.getItem('motivationRecords')) || [];
             const updatedRecords = records.filter(r => r.date !== recordDate.value);
+            if (records.length === updatedRecords.length) {
+                console.error('削除対象のイベントが見つかりませんでした。');
+                return;
+            }
             localStorage.setItem('motivationRecords', JSON.stringify(updatedRecords));
 
-            alert('イベントが削除されました！');
+            
             recordPopup.style.display = 'none';
             updateGraph();
         });
