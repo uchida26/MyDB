@@ -233,11 +233,11 @@
 
         graph.addEventListener('click', (e) => {
             const activeTab = document.querySelector('.tab button.active').id;
-            if (activeTab === 'day-tab') {
-                recordDate.value = 'Selected Day'; // Placeholder
-            } else {
-                recordDate.value = 'Selected Year'; // Placeholder
-            }
+            const rect = graph.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const labels = activeTab === 'day-tab' ? getLast7Days(currentOffset) : getNext7Years(currentOffset);
+            const index = Math.floor((x / graph.width) * labels.length);
+            recordDate.value = labels[index] || '';
             recordPopup.style.display = 'block';
         });
 
