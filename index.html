@@ -149,7 +149,7 @@
             const records = JSON.parse(localStorage.getItem('motivationRecords')) || [];
             return labels.map(label => {
                 const record = records.find(r => r.date === label);
-                return record ? parseInt(record.motivation, 10) : null;
+                return record ? { value: parseInt(record.motivation, 10), date: record.date } : null;
             });
         }
 
@@ -188,17 +188,29 @@
             ctx.stroke();
 
             // Plot points
-            ctx.beginPath();
-            ctx.strokeStyle = "#a68c68";
-            ctx.lineWidth = 2;
             data.forEach((point, i) => {
                 if (point !== null) {
                     const x = padding + i * stepX;
-                    const y = height - padding - point * stepY;
-                    ctx.lineTo(x, y);
+                    const y = height - padding - point.value * stepY;
+                    ctx.beginPath();
+                    ctx.arc(x, y, 5, 0, Math.PI * 2);
+                    ctx.fillStyle = "#a68c68";
+                    ctx.fill();
+
+                    // Add event listener for editing
+                    graph.addEventListener('click', function(event) {
+                        const rect = graph.getBoundingClientRect();
+                        const clickX = event.clientX - rect.left;
+                        const clickY = event.clientY - rect.top;
+
+                        if (Math.abs(clickX - x) < 10 && Math.abs(clickY - y) < 10) {
+                            recordDate.value = point.date;
+                            recordMotivation.value = point.value;
+                            recordPopup.style.display = 'block';
+                        }
+                    });
                 }
             });
-            ctx.stroke();
         }
 
         function updateGraph() {
@@ -251,7 +263,12 @@
 
             // Save to localStorage
             let records = JSON.parse(localStorage.getItem('motivationRecords')) || [];
-            records.push(data);
+            const existingIndex = records.findIndex(r => r.date === data.date);
+            if (existingIndex !== -1) {
+                records[existingIndex] = data; // Update existing record
+            } else {
+                records.push(data); // Add new record
+            }
             localStorage.setItem('motivationRecords', JSON.stringify(records));
 
             alert('モチベーションを記録しました！');
