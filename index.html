@@ -145,6 +145,14 @@
             return years;
         }
 
+        function getMotivationData(labels) {
+            const records = JSON.parse(localStorage.getItem('motivationRecords')) || [];
+            return labels.map(label => {
+                const record = records.find(r => r.date === label);
+                return record ? parseInt(record.motivation, 10) : null;
+            });
+        }
+
         // Initialize Graph
         function drawGraph(data, labels) {
             ctx.clearRect(0, 0, graph.width, graph.height);
@@ -184,11 +192,9 @@
             ctx.strokeStyle = "#a68c68";
             ctx.lineWidth = 2;
             data.forEach((point, i) => {
-                const x = padding + i * stepX;
-                const y = height - padding - point * stepY;
-                if (i === 0) {
-                    ctx.moveTo(x, y);
-                } else {
+                if (point !== null) {
+                    const x = padding + i * stepX;
+                    const y = height - padding - point * stepY;
                     ctx.lineTo(x, y);
                 }
             });
@@ -197,13 +203,9 @@
 
         function updateGraph() {
             const activeTab = document.querySelector('.tab button.active').id;
-            if (activeTab === 'day-tab') {
-                const labels = getLast7Days(currentOffset);
-                drawGraph([], labels);
-            } else {
-                const labels = getNext7Years(currentOffset);
-                drawGraph([], labels);
-            }
+            const labels = activeTab === 'day-tab' ? getLast7Days(currentOffset) : getNext7Years(currentOffset);
+            const data = getMotivationData(labels);
+            drawGraph(data, labels);
         }
 
         // Event Listeners
@@ -254,6 +256,7 @@
 
             alert('モチベーションを記録しました！');
             recordPopup.style.display = 'none';
+            updateGraph();
         });
 
         // Close popup if clicked outside
